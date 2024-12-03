@@ -2,7 +2,9 @@
 #include <math.h>
 
 float angle1 = 90.0, angle2 = -45.0, angle3 = -60.0;
-float lightIntensity = 0.0;
+float lightIntensity = 1.0;
+float cameraX = 0.0, cameraY = 0.0, cameraZ = 5.0;
+float cameraAngleX = 0.0, cameraAngleY = 0.0;
 
 void drawSegment() {
     glPushMatrix();
@@ -58,7 +60,7 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt(cameraX, cameraY, cameraZ, cameraX + sin(cameraAngleY), cameraY + sin(cameraAngleX), cameraZ - cos(cameraAngleY), 0.0, 1.0, 0.0);
 
     glTranslatef(-1.5, 0.0, 0.0);
 
@@ -105,6 +107,20 @@ void init() {
     glMatrixMode(GL_MODELVIEW);
 }
 
+void reset() {
+    angle1 = 90.0;
+    angle2 = -45.0;
+    angle3 = -60.0;
+    lightIntensity = 1.0;
+    cameraX = 0.0;
+    cameraY = 0.0;
+    cameraZ = 5.0;
+    cameraAngleX = 0.0;
+    cameraAngleY = 0.0;
+    setupLighting();
+    glutPostRedisplay();
+}
+
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
         case 'q': angle1 += 5.0; break;
@@ -113,6 +129,26 @@ void keyboard(unsigned char key, int x, int y) {
         case 's': angle2 -= 5.0; break;
         case 'e': angle3 += 5.0; break;
         case 'd': angle3 -= 5.0; break;
+        case '+': cameraY += 0.1; break;
+        case '-': cameraY -= 0.1; break;
+    }
+    glutPostRedisplay();
+}
+
+void specialKeys(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_PAGE_UP: cameraAngleX -= 0.05; break;
+        case GLUT_KEY_PAGE_DOWN: cameraAngleX += 0.05; break;
+        case GLUT_KEY_UP:
+            cameraX += sin(cameraAngleY) * 0.1;
+            cameraZ -= cos(cameraAngleY) * 0.1;
+            break;
+        case GLUT_KEY_DOWN:
+            cameraX -= sin(cameraAngleY) * 0.1;
+            cameraZ += cos(cameraAngleY) * 0.1;
+            break;
+        case GLUT_KEY_LEFT: cameraAngleY -= 0.05; break;
+        case GLUT_KEY_RIGHT: cameraAngleY += 0.05; break;
     }
     glutPostRedisplay();
 }
@@ -129,6 +165,12 @@ void mouseWheel(int button, int dir, int x, int y) {
     glutPostRedisplay();
 }
 
+void menu(int option) {
+    if (option == 0) {
+        reset();
+    }
+}
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -139,7 +181,12 @@ int main(int argc, char** argv) {
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
     glutMouseFunc(mouseWheel);
+
+    glutCreateMenu(menu);
+    glutAddMenuEntry("Reset", 0);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     glutMainLoop();
     return 0;
