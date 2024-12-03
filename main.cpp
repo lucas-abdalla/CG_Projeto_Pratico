@@ -1,7 +1,8 @@
 #include <GL/glut.h>
 #include <math.h>
 
-float angle1 = 0.0, angle2 = 0.0, angle3 = 0.0;
+float angle1 = 90.0, angle2 = -45.0, angle3 = -60.0;
+float lightIntensity = 0.0;
 
 void drawSegment() {
     glPushMatrix();
@@ -38,8 +39,8 @@ void drawTable() {
 }
 
 void setupLighting() {
-    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light_diffuse[] = { lightIntensity, lightIntensity, lightIntensity, 1.0 };
+    GLfloat light_specular[] = { lightIntensity, lightIntensity, lightIntensity, 1.0 };
 
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
@@ -116,6 +117,18 @@ void keyboard(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
+void mouseWheel(int button, int dir, int x, int y) {
+    if (dir > 0) {
+        lightIntensity += 0.1;
+    } else {
+        lightIntensity -= 0.1;
+    }
+    if (lightIntensity < 0.0) lightIntensity = 0.0;
+    if (lightIntensity > 1.0) lightIntensity = 1.0;
+    setupLighting();
+    glutPostRedisplay();
+}
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -126,6 +139,7 @@ int main(int argc, char** argv) {
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
+    glutMouseFunc(mouseWheel);
 
     glutMainLoop();
     return 0;
