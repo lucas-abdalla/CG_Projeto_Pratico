@@ -1,10 +1,41 @@
 #include <GL/glut.h>
 #include <math.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
+GLuint idTextura;
 float angle1 = 90.0, angle2 = -45.0, angle3 = -60.0;
 float lightIntensity = 1.0;
 float cameraX = 0.0, cameraY = 0.0, cameraZ = 5.0;
 float cameraAngleX = 0.0, cameraAngleY = 0.0;
+
+void carregarTextura(const char* nomeArquivo)
+{
+    int largura, altura, canais;
+
+    unsigned char *dados = stbi_load(nomeArquivo, &largura, &altura, &canais, 0);
+
+    if (!dados)
+    exit(1);
+
+    // gerar textura
+    glGenTextures(1, &idTextura);
+    glBindTexture(GL_TEXTURE_2D, idTextura);
+
+    // configurar parametros da textura
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, (canais == 4) ? GL_RGBA : GL_RGB, 
+                largura, altura, 0, (canais == 4) ? GL_RGBA : GL_RGB,
+                GL_UNSIGNED_BYTE, dados);
+
+    // liberar a memoria da imagem
+    stbi_image_free(dados);              
+}
 
 void drawSegment() {
     glPushMatrix();
@@ -32,40 +63,43 @@ void drawBase() {
 
 void drawTable() {
     glPushMatrix();
-    glColor3f(0.6, 0.3, 0.0); // Set color to brown
     glTranslatef(0.0, -0.50, 0.0); // Position the plank under the base
+
+    glBindTexture(GL_TEXTURE_2D, idTextura);
     glBegin(GL_QUADS);
         // Top face
-        glVertex3f(-5.0, 0.25, -5.0);
-        glVertex3f(5.0, 0.25, -5.0);
-        glVertex3f(5.0, 0.25, 5.0);
-        glVertex3f(-5.0, 0.25, 5.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, 0.25, -5.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(5.0, 0.25, -5.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, 5.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, 5.0);
         // Bottom face
-        glVertex3f(-5.0, -0.25, -5.0);
-        glVertex3f(5.0, -0.25, -5.0);
-        glVertex3f(5.0, -0.25, 5.0);
-        glVertex3f(-5.0, -0.25, 5.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, -5.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, -5.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(5.0, -0.25, 5.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, -0.25, 5.0);
         // Front face
-        glVertex3f(-5.0, -0.25, 5.0);
-        glVertex3f(5.0, -0.25, 5.0);
-        glVertex3f(5.0, 0.25, 5.0);
-        glVertex3f(-5.0, 0.25, 5.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, 5.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, 5.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, 5.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, 5.0);
         // Back face
-        glVertex3f(-5.0, -0.25, -5.0);
-        glVertex3f(5.0, -0.25, -5.0);
-        glVertex3f(5.0, 0.25, -5.0);
-        glVertex3f(-5.0, 0.25, -5.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, -5.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, -5.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, -5.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, -5.0);
         // Left face
-        glVertex3f(-5.0, -0.25, -5.0);
-        glVertex3f(-5.0, -0.25, 5.0);
-        glVertex3f(-5.0, 0.25, 5.0);
-        glVertex3f(-5.0, 0.25, -5.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, -5.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(-5.0, -0.25, 5.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(-5.0, 0.25, 5.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, -5.0);
         // Right face
-        glVertex3f(5.0, -0.25, -5.0);
-        glVertex3f(5.0, -0.25, 5.0);
-        glVertex3f(5.0, 0.25, 5.0);
-        glVertex3f(5.0, 0.25, -5.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(5.0, -0.25, -5.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, 5.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, 5.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(5.0, 0.25, -5.0);
     glEnd();
+
+    glBindTexture(GL_TEXTURE_2D, 0); // Unbind the texture
     glColor3f(1.0, 1.0, 1.0); // Reset color to white
     glPopMatrix();
 }
@@ -82,7 +116,7 @@ void setupLighting() {
 }
 
 void updateLightPosition() {
-    GLfloat light_position[] = { 1.5 + 0.5 * cos(angle1 * M_PI / 180.0), 0.0, 0.0, 1.0 };
+    GLfloat light_position[] = { 1.5 + 0.5 * cos(angle1 * M_PI / 30.0), 0.0, 0.0, 1.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 }
 
@@ -118,7 +152,7 @@ void display() {
 
     glTranslatef(0.5, 0.0, 0.0);
     drawSphere(0.2, 1.0, 1.0, 1.0); // Make the last sphere white and bigger
-    GLfloat light_position[] = { 1.5 + 0.5 * cos(angle1 * M_PI / 180.0), 0.0, 0.0, 1.0 };
+    GLfloat light_position[] = { 1.5 + 0.5 * cos(angle1 * M_PI / 30.0), 0.0, 0.0, 1.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, light_position); // Update the light position to move with the sphere
     glPopMatrix();
 
@@ -135,6 +169,8 @@ void init() {
     glLoadIdentity();
     gluPerspective(45.0, 1.0, 1.0, 100.0);
     glMatrixMode(GL_MODELVIEW);
+    glEnable(GL_TEXTURE_2D);
+    carregarTextura("texturas/madeira-hd.jpg");
 }
 
 void reset() {
@@ -183,7 +219,7 @@ void specialKeys(int key, int x, int y) {
     glutPostRedisplay();
 }
 
-void mouseWheel(int button, int dir, int x, int y) {
+/*void mouseWheel(int button, int dir, int x, int y) {
     if (dir > 0) {
         lightIntensity += 0.1;
     } else {
@@ -193,7 +229,7 @@ void mouseWheel(int button, int dir, int x, int y) {
     if (lightIntensity > 1.0) lightIntensity = 1.0;
     setupLighting();
     glutPostRedisplay();
-}
+}*/
 
 void menu(int option) {
     if (option == 0) {
@@ -212,7 +248,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(specialKeys);
-    glutMouseFunc(mouseWheel);
+    //glutMouseFunc(mouseWheel);
 
     glutCreateMenu(menu);
     glutAddMenuEntry("Reset", 0);
