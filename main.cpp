@@ -33,9 +33,39 @@ void drawBase() {
 void drawTable() {
     glPushMatrix();
     glColor3f(0.6, 0.3, 0.0); // Set color to brown
-    glTranslatef(0.0, -0.75, 0.0); // Position the table under the base
-    glScalef(10.0, 0.5, 10.0); // Scale the cube to make it look like a table
-    glutSolidCube(1.0);
+    glTranslatef(0.0, -0.50, 0.0); // Position the plank under the base
+    glBegin(GL_QUADS);
+        // Top face
+        glVertex3f(-5.0, 0.25, -5.0);
+        glVertex3f(5.0, 0.25, -5.0);
+        glVertex3f(5.0, 0.25, 5.0);
+        glVertex3f(-5.0, 0.25, 5.0);
+        // Bottom face
+        glVertex3f(-5.0, -0.25, -5.0);
+        glVertex3f(5.0, -0.25, -5.0);
+        glVertex3f(5.0, -0.25, 5.0);
+        glVertex3f(-5.0, -0.25, 5.0);
+        // Front face
+        glVertex3f(-5.0, -0.25, 5.0);
+        glVertex3f(5.0, -0.25, 5.0);
+        glVertex3f(5.0, 0.25, 5.0);
+        glVertex3f(-5.0, 0.25, 5.0);
+        // Back face
+        glVertex3f(-5.0, -0.25, -5.0);
+        glVertex3f(5.0, -0.25, -5.0);
+        glVertex3f(5.0, 0.25, -5.0);
+        glVertex3f(-5.0, 0.25, -5.0);
+        // Left face
+        glVertex3f(-5.0, -0.25, -5.0);
+        glVertex3f(-5.0, -0.25, 5.0);
+        glVertex3f(-5.0, 0.25, 5.0);
+        glVertex3f(-5.0, 0.25, -5.0);
+        // Right face
+        glVertex3f(5.0, -0.25, -5.0);
+        glVertex3f(5.0, -0.25, 5.0);
+        glVertex3f(5.0, 0.25, 5.0);
+        glVertex3f(5.0, 0.25, -5.0);
+    glEnd();
     glColor3f(1.0, 1.0, 1.0); // Reset color to white
     glPopMatrix();
 }
