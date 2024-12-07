@@ -5,8 +5,10 @@
 #include <stb_image.h>
 
 GLuint idTextura;
-float angle1 = 90.0, angle2 = -45.0, angle3 = -60.0;
-float lightIntensity = 1.0;
+float angle1 = 90.0, angle2 = 315.0, angle3 = 315.0;
+float angle4 = 0.0, angle5 = 0.0, angle6 = 0.0;
+float angle7 = 0.0, angle8 = 0.0, angle9 = 0.0;
+float lightColor[3] = {1.0, 1.0, 1.0};
 float cameraX = 0.0, cameraY = 0.0, cameraZ = 5.0;
 float cameraAngleX = 0.0, cameraAngleY = 0.0;
 
@@ -104,20 +106,62 @@ void drawTable() {
     glPopMatrix();
 }
 
+void drawLamp() {
+    glPushMatrix();
+    glTranslatef(0.0, 0.25, 0.0); // Move the sphere to the top of the cone
+    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere between the cone and the first segment
+
+    glRotatef(angle1, 0.0, 0.0, 1.0);
+    glRotatef(angle4, 0.0, 1.0, 0.0);
+    glRotatef(angle7, 1.0, 0.0, 0.0);
+    glTranslatef(0.5, 0.0, 0.0);
+    drawSegment();
+
+    glTranslatef(0.5, 0.0, 0.0);
+    glRotatef(angle2, 0.0, 0.0, 1.0);
+    glRotatef(angle5, 0.0, 1.0, 0.0);
+    glRotatef(angle8, 1.0, 0.0, 0.0);
+    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere
+    glTranslatef(0.5, 0.0, 0.0);
+    drawSegment();
+
+    glTranslatef(0.5, 0.0, 0.0);
+    glRotatef(angle3, 0.0, 0.0, 1.0);
+    glRotatef(angle6, 0.0, 1.0, 0.0);
+    glRotatef(angle9, 1.0, 0.0, 0.0);
+    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere
+    glTranslatef(0.5, 0.0, 0.0);
+    drawSegment();
+
+    glTranslatef(0.5, 0.0, 0.0);
+    drawSphere(0.2, 1.0, 1.0, 1.0); // Make the last sphere white and bigger
+
+    // Add the cone shell to the last white sphere
+    glPushMatrix();
+    glColor3f(0.0, 0.0, 0.0); // Set color to black
+    glTranslatef(0.3, 0.0, 0.0); // Position the cone shell below the white sphere
+    glRotatef(30, 1.0, 0.0, 0.0); // Rotate the cone to point upwards
+    glRotatef(-90, 0.0, 1.0, 0.0);
+    glutWireCone(0.6, 0.6, 200, 200); // Draw the cone shell
+    glColor3f(1.0, 1.0, 1.0); // Reset color to white
+    glPopMatrix();
+
+    GLfloat light_position[] = { 2.5, 0.25, 0.0, 1.0 };
+    //GLfloat spotDirection[] = {1.0, 0.0, 0.0};
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    //glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spotDirection);
+    glPopMatrix();
+}
+
 void setupLighting() {
-    GLfloat light_diffuse[] = { lightIntensity, lightIntensity, lightIntensity, 1.0 };
-    GLfloat light_specular[] = { lightIntensity, lightIntensity, lightIntensity, 1.0 };
+    GLfloat light_diffuse[] = { lightColor[0], lightColor[1], lightColor[2], 1.0 };
+    GLfloat light_specular[] = { lightColor[0], lightColor[1], lightColor[2], 1.0 };
 
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-}
-
-void updateLightPosition() {
-    GLfloat light_position[] = { 1.5 + 0.5 * cos(angle1 * M_PI / 30.0), 0.0, 0.0, 1.0 };
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 }
 
 void display() {
@@ -130,31 +174,7 @@ void display() {
 
     drawTable(); // Draw the table
     drawBase(); // Draw the base
-
-    glPushMatrix();
-    glTranslatef(0.0, 0.25, 0.0); // Move the sphere to the top of the cone
-    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere between the cone and the first segment
-    glRotatef(angle1, 0.0, 0.0, 1.0);
-    glTranslatef(0.5, 0.0, 0.0);
-    drawSegment();
-
-    glTranslatef(0.5, 0.0, 0.0);
-    glRotatef(angle2, 0.0, 0.0, 1.0);
-    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere
-    glTranslatef(0.5, 0.0, 0.0);
-    drawSegment();
-
-    glTranslatef(0.5, 0.0, 0.0);
-    glRotatef(angle3, 0.0, 0.0, 1.0);
-    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere
-    glTranslatef(0.5, 0.0, 0.0);
-    drawSegment();
-
-    glTranslatef(0.5, 0.0, 0.0);
-    drawSphere(0.2, 1.0, 1.0, 1.0); // Make the last sphere white and bigger
-    GLfloat light_position[] = { 1.5 + 0.5 * cos(angle1 * M_PI / 30.0), 0.0, 0.0, 1.0 };
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position); // Update the light position to move with the sphere
-    glPopMatrix();
+    drawLamp(); // Draw the lamp with the cone shell
 
     glutSwapBuffers();
 }
@@ -177,7 +197,9 @@ void reset() {
     angle1 = 90.0;
     angle2 = -45.0;
     angle3 = -60.0;
-    lightIntensity = 1.0;
+    lightColor[0] = 1.0;
+    lightColor[1] = 1.0;
+    lightColor[2] = 1.0;
     cameraX = 0.0;
     cameraY = 0.0;
     cameraZ = 5.0;
@@ -189,12 +211,24 @@ void reset() {
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-        case 'q': angle1 += 5.0; break;
-        case 'a': angle1 -= 5.0; break;
-        case 'w': angle2 += 5.0; break;
-        case 's': angle2 -= 5.0; break;
-        case 'e': angle3 += 5.0; break;
-        case 'd': angle3 -= 5.0; break;
+        case 'Q': angle1 += 5.0; break;
+        case 'q': angle1 -= 5.0; break;
+        case 'W': angle2 += 5.0; break;
+        case 'w': angle2 -= 5.0; break;
+        case 'E': angle3 += 5.0; break;
+        case 'e': angle3 -= 5.0; break;
+        case 'A': angle4 += 5.0; break;
+        case 'a': angle4 -= 5.0; break;
+        case 'S': angle5 += 5.0; break;
+        case 's': angle5 -= 5.0; break;
+        case 'D': angle6 += 5.0; break;
+        case 'd': angle6 -= 5.0; break;
+        case 'Z': angle7 += 5.0; break;
+        case 'z': angle7 -= 5.0; break;
+        case 'X': angle8 += 5.0; break;
+        case 'x': angle8 -= 5.0; break;
+        case 'C': angle9 += 5.0; break;
+        case 'c': angle9 -= 5.0; break;
         case '+': cameraY += 0.1; break;
         case '-': cameraY -= 0.1; break;
     }
@@ -203,8 +237,8 @@ void keyboard(unsigned char key, int x, int y) {
 
 void specialKeys(int key, int x, int y) {
     switch (key) {
-        case GLUT_KEY_PAGE_UP: cameraAngleX -= 0.05; break;
-        case GLUT_KEY_PAGE_DOWN: cameraAngleX += 0.05; break;
+        case GLUT_KEY_PAGE_DOWN: cameraAngleX -= 0.05; break;
+        case GLUT_KEY_PAGE_UP: cameraAngleX += 0.05; break;
         case GLUT_KEY_UP:
             cameraX += sin(cameraAngleY) * 0.1;
             cameraZ -= cos(cameraAngleY) * 0.1;
@@ -218,18 +252,6 @@ void specialKeys(int key, int x, int y) {
     }
     glutPostRedisplay();
 }
-
-/*void mouseWheel(int button, int dir, int x, int y) {
-    if (dir > 0) {
-        lightIntensity += 0.1;
-    } else {
-        lightIntensity -= 0.1;
-    }
-    if (lightIntensity < 0.0) lightIntensity = 0.0;
-    if (lightIntensity > 1.0) lightIntensity = 1.0;
-    setupLighting();
-    glutPostRedisplay();
-}*/
 
 void menu(int option) {
     if (option == 0) {
@@ -248,7 +270,6 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(specialKeys);
-    //glutMouseFunc(mouseWheel);
 
     glutCreateMenu(menu);
     glutAddMenuEntry("Reset", 0);
