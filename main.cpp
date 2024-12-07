@@ -9,8 +9,8 @@ float angle1 = 90.0, angle2 = 315.0, angle3 = 315.0;
 float angle4 = 0.0, angle5 = 0.0, angle6 = 0.0;
 float angle7 = 0.0, angle8 = 0.0, angle9 = 0.0;
 float lightColor[3] = {1.0, 1.0, 1.0};
-float cameraX = 0.0, cameraY = 0.0, cameraZ = 5.0;
-float cameraAngleX = 0.0, cameraAngleY = 0.0;
+float cameraX = 0.0, cameraY = 2.0, cameraZ = 9.0;
+float cameraAngleX = 0.0, cameraAngleY = -0.1;
 
 void carregarTextura(const char* nomeArquivo)
 {
@@ -41,22 +41,22 @@ void carregarTextura(const char* nomeArquivo)
 
 void drawSegment() {
     glPushMatrix();
-    glColor3f(0.2, 0.2, 0.2); // Set color to dark gray
+    glColor3f(0.2, 0.2, 0.2); // Dark grey
     glScalef(1.0, 0.2, 0.2);
     glutSolidCube(1.0);
     glPopMatrix();
 }
 
 void drawSphere(float size, float r, float g, float b) {
-    glColor3f(r, g, b); // Set color
+    glColor3f(r, g, b); // Sphere color
     glutSolidSphere(size, 20, 20);
-    glColor3f(1.0, 1.0, 1.0); // Reset color to white
+    glColor3f(1.0, 1.0, 1.0); // Reseta color to white
 }
 
 void drawBase() {
     glPushMatrix();
     glColor3f(0.2, 0.2, 0.2); // Set color to dark gray
-    glTranslatef(0.0, -0.25, 0.0); // Adjust position to be closer to the first segment
+    glTranslatef(-2.0, -0.25, 0.0); // Adjust position to be closer to the first segment
     glRotatef(-90, 1.0, 0.0, 0.0);
     glutSolidCone(0.25, 0.5, 20, 20); // Make the cone smaller
     glColor3f(1.0, 1.0, 1.0); // Reset color to white
@@ -108,7 +108,7 @@ void drawTable() {
 
 void drawLamp() {
     glPushMatrix();
-    glTranslatef(0.0, 0.25, 0.0); // Move the sphere to the top of the cone
+    glTranslatef(-2.0, 0.25, 0.0); // Move the sphere to the top of the cone
     drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere between the cone and the first segment
 
     glRotatef(angle1, 0.0, 0.0, 1.0);
@@ -126,6 +126,7 @@ void drawLamp() {
     drawSegment();
 
     glTranslatef(0.5, 0.0, 0.0);
+    glRotatef(angle3, 0.5, 0.0, 0.0);
     glRotatef(angle3, 0.0, 0.0, 1.0);
     glRotatef(angle6, 0.0, 1.0, 0.0);
     glRotatef(angle9, 1.0, 0.0, 0.0);
@@ -147,9 +148,15 @@ void drawLamp() {
     glPopMatrix();
 
     GLfloat light_position[] = { 2.5, 0.25, 0.0, 1.0 };
-    //GLfloat spotDirection[] = {1.0, 0.0, 0.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    //glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spotDirection);
+    glPopMatrix();
+}
+
+void drawTeapot() {
+    glPushMatrix();
+    glTranslatef(1.5, 0.5, 0.0); // Position the teapot on the table
+    glColor3f(0.5, 0.5, 0.5); // Set color to brown
+    glutSolidTeapot(1.0); // Draw a solid teapot
     glPopMatrix();
 }
 
@@ -175,6 +182,7 @@ void display() {
     drawTable(); // Draw the table
     drawBase(); // Draw the base
     drawLamp(); // Draw the lamp with the cone shell
+    drawTeapot(); // Draw the teapot
 
     glutSwapBuffers();
 }
@@ -195,16 +203,22 @@ void init() {
 
 void reset() {
     angle1 = 90.0;
-    angle2 = -45.0;
-    angle3 = -60.0;
+    angle2 = 315.0;
+    angle3 = 315.0;
+    angle4 = 0.0;
+    angle5 = 0.0;
+    angle6 = 0.0;
+    angle7 = 0.0;
+    angle8 = 0.0;
+    angle9 = 0.0;
     lightColor[0] = 1.0;
     lightColor[1] = 1.0;
     lightColor[2] = 1.0;
     cameraX = 0.0;
-    cameraY = 0.0;
-    cameraZ = 5.0;
+    cameraY = 2.0;
+    cameraZ = 9.0;
     cameraAngleX = 0.0;
-    cameraAngleY = 0.0;
+    cameraAngleY = -0.1;
     setupLighting();
     glutPostRedisplay();
 }
@@ -256,24 +270,52 @@ void specialKeys(int key, int x, int y) {
 void menu(int option) {
     if (option == 0) {
         reset();
+    } else if (option == 1) {
+        lightColor[0] = 1.0; // Red
+        lightColor[1] = 0.0;
+        lightColor[2] = 0.0;
+    } else if (option == 2) {
+        lightColor[0] = 0.0; // Green
+        lightColor[1] = 1.0;
+        lightColor[2] = 0.0;
+    } else if (option == 3) {
+        lightColor[0] = 0.0; // Blue
+        lightColor[1] = 0.0;
+        lightColor[2] = 1.0;
+    } else if (option == 4) {
+        lightColor[0] = 1.0; //White
+        lightColor[1] = 1.0;
+        lightColor[2] = 1.0;
     }
+    setupLighting();
+    glutPostRedisplay();
+}
+
+void createMenu() {
+    int submenu = glutCreateMenu(menu);
+    glutAddMenuEntry("Red", 1);
+    glutAddMenuEntry("Green", 2);
+    glutAddMenuEntry("Blue", 3);
+    glutAddMenuEntry("White", 4);
+
+    glutCreateMenu(menu);
+    glutAddMenuEntry("Reset", 0);
+    glutAddSubMenu("Change Light Color", submenu);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
-    glutCreateWindow("Mechanical Arm");
+    glutCreateWindow("Mechanical Lamp");
 
     init();
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(specialKeys);
-
-    glutCreateMenu(menu);
-    glutAddMenuEntry("Reset", 0);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
+    createMenu();
 
     glutMainLoop();
     return 0;
