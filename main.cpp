@@ -11,6 +11,8 @@ float angle7 = 0.0, angle8 = 0.0, angle9 = 0.0;
 float lightColor[3] = {1.0, 1.0, 1.0};
 float cameraX = 0.0, cameraY = 2.0, cameraZ = 9.0;
 float cameraAngleX = 0.0, cameraAngleY = -0.1;
+bool lightOn = true;
+int color = 4;
 
 void carregarTextura(const char* nomeArquivo)
 {
@@ -126,7 +128,6 @@ void drawLamp() {
     drawSegment();
 
     glTranslatef(0.5, 0.0, 0.0);
-    glRotatef(angle3, 0.5, 0.0, 0.0);
     glRotatef(angle3, 0.0, 0.0, 1.0);
     glRotatef(angle6, 0.0, 1.0, 0.0);
     glRotatef(angle9, 1.0, 0.0, 0.0);
@@ -166,7 +167,6 @@ void setupLighting() {
 
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 }
@@ -219,6 +219,8 @@ void reset() {
     cameraZ = 9.0;
     cameraAngleX = 0.0;
     cameraAngleY = -0.1;
+    lightOn = true;
+    color = 4;
     setupLighting();
     glutPostRedisplay();
 }
@@ -267,6 +269,39 @@ void specialKeys(int key, int x, int y) {
     glutPostRedisplay();
 }
 
+void mouse(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        lightOn = !lightOn; // Toggle light state
+        if (!lightOn) {
+            lightColor[0] = 0.0;
+            lightColor[1] = 0.0;
+            lightColor[2] = 0.0;
+        }
+        else if (color == 1) {
+            lightColor[0] = 1.0;
+            lightColor[1] = 0.0;
+            lightColor[2] = 0.0;
+        }
+        else if (color == 2) {
+            lightColor[0] = 0.0;
+            lightColor[1] = 1.0;
+            lightColor[2] = 0.0;
+        }
+        else if (color == 3) {
+            lightColor[0] = 0.0;
+            lightColor[1] = 0.0;
+            lightColor[2] = 1.0;
+        }
+        else if (color == 4) {
+            lightColor[0] = 1.0;
+            lightColor[1] = 1.0;
+            lightColor[2] = 1.0;
+        }
+        setupLighting();
+        glutPostRedisplay();
+    }
+}
+
 void menu(int option) {
     if (option == 0) {
         reset();
@@ -274,18 +309,22 @@ void menu(int option) {
         lightColor[0] = 1.0; // Red
         lightColor[1] = 0.0;
         lightColor[2] = 0.0;
+        color = option;
     } else if (option == 2) {
         lightColor[0] = 0.0; // Green
         lightColor[1] = 1.0;
         lightColor[2] = 0.0;
+        color = option;
     } else if (option == 3) {
         lightColor[0] = 0.0; // Blue
         lightColor[1] = 0.0;
         lightColor[2] = 1.0;
+        color = option;
     } else if (option == 4) {
         lightColor[0] = 1.0; //White
         lightColor[1] = 1.0;
         lightColor[2] = 1.0;
+        color = option;
     }
     setupLighting();
     glutPostRedisplay();
@@ -315,6 +354,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(specialKeys);
+    glutMouseFunc(mouse);
     createMenu();
 
     glutMainLoop();
