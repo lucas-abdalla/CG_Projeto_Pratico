@@ -144,7 +144,7 @@ void drawLamp() {
     glTranslatef(0.3, 0.0, 0.0); // Posiciona o cone
     glRotatef(30, 1.0, 0.0, 0.0); // Rotaciona o cone
     glRotatef(-90, 0.0, 1.0, 0.0);
-    glutWireCone(0.6, 0.6, 200, 200); // Desenha o cone
+    glutWireCone(0.6, 0.6, 250, 250); // Desenha o cone
     glColor3f(1.0, 1.0, 1.0); // Reseta cor para branco
     glPopMatrix();
 
