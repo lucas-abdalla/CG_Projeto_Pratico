@@ -43,75 +43,75 @@ void carregarTextura(const char* nomeArquivo)
 
 void drawSegment() {
     glPushMatrix();
-    glColor3f(0.2, 0.2, 0.2); // Dark grey
+    glColor3f(0.2, 0.2, 0.2); // Cinza escuro
     glScalef(1.0, 0.2, 0.2);
     glutSolidCube(1.0);
     glPopMatrix();
 }
 
 void drawSphere(float size, float r, float g, float b) {
-    glColor3f(r, g, b); // Sphere color
+    glColor3f(r, g, b); // Cor da esfera
     glutSolidSphere(size, 20, 20);
-    glColor3f(1.0, 1.0, 1.0); // Reseta color to white
+    glColor3f(1.0, 1.0, 1.0); // Reseta cor para branco
 }
 
 void drawBase() {
     glPushMatrix();
-    glColor3f(0.2, 0.2, 0.2); // Set color to dark gray
-    glTranslatef(-2.0, -0.25, 0.0); // Adjust position to be closer to the first segment
+    glColor3f(0.2, 0.2, 0.2); // Cinza escuro
+    glTranslatef(-2.0, -0.25, 0.0);
     glRotatef(-90, 1.0, 0.0, 0.0);
-    glutSolidCone(0.25, 0.5, 20, 20); // Make the cone smaller
-    glColor3f(1.0, 1.0, 1.0); // Reset color to white
+    glutSolidCone(0.5, 0.5, 20, 20);
+    glColor3f(1.0, 1.0, 1.0); // Reseta cor para branco
     glPopMatrix();
 }
 
 void drawTable() {
     glPushMatrix();
-    glTranslatef(0.0, -0.50, 0.0); // Position the plank under the base
+    glTranslatef(0.0, -0.50, 0.0); // Posicionar mesa embaixo da base
 
     glBindTexture(GL_TEXTURE_2D, idTextura);
     glBegin(GL_QUADS);
-        // Top face
+        // Face superior
         glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, 0.25, -5.0);
         glTexCoord2f(1.0, 0.0); glVertex3f(5.0, 0.25, -5.0);
         glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, 5.0);
         glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, 5.0);
-        // Bottom face
+        // Face inferior
         glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, -5.0);
         glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, -5.0);
         glTexCoord2f(1.0, 1.0); glVertex3f(5.0, -0.25, 5.0);
         glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, -0.25, 5.0);
-        // Front face
+        // Face frontal
         glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, 5.0);
         glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, 5.0);
         glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, 5.0);
         glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, 5.0);
-        // Back face
+        // Face traseira
         glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, -5.0);
         glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, -5.0);
         glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, -5.0);
         glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, -5.0);
-        // Left face
+        // Face esquerda
         glTexCoord2f(0.0, 0.0); glVertex3f(-5.0, -0.25, -5.0);
         glTexCoord2f(1.0, 0.0); glVertex3f(-5.0, -0.25, 5.0);
         glTexCoord2f(1.0, 1.0); glVertex3f(-5.0, 0.25, 5.0);
         glTexCoord2f(0.0, 1.0); glVertex3f(-5.0, 0.25, -5.0);
-        // Right face
+        // Face direita
         glTexCoord2f(0.0, 0.0); glVertex3f(5.0, -0.25, -5.0);
         glTexCoord2f(1.0, 0.0); glVertex3f(5.0, -0.25, 5.0);
         glTexCoord2f(1.0, 1.0); glVertex3f(5.0, 0.25, 5.0);
         glTexCoord2f(0.0, 1.0); glVertex3f(5.0, 0.25, -5.0);
     glEnd();
 
-    glBindTexture(GL_TEXTURE_2D, 0); // Unbind the texture
-    glColor3f(1.0, 1.0, 1.0); // Reset color to white
+    glBindTexture(GL_TEXTURE_2D, 0); // Desvincula textura
+    glColor3f(1.0, 1.0, 1.0); // Reseta cor para branco
     glPopMatrix();
 }
 
 void drawLamp() {
     glPushMatrix();
-    glTranslatef(-2.0, 0.25, 0.0); // Move the sphere to the top of the cone
-    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere between the cone and the first segment
+    glTranslatef(-2.0, 0.25, 0.0); // Move esfera para o topo do cone
+    drawSphere(0.1, 1.0, 0.0, 0.0); // Adiciona esfera entre o cone e o primeiro segmento
 
     glRotatef(angle1, 0.0, 0.0, 1.0);
     glRotatef(angle4, 0.0, 1.0, 0.0);
@@ -123,7 +123,7 @@ void drawLamp() {
     glRotatef(angle2, 0.0, 0.0, 1.0);
     glRotatef(angle5, 0.0, 1.0, 0.0);
     glRotatef(angle8, 1.0, 0.0, 0.0);
-    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere
+    drawSphere(0.1, 1.0, 0.0, 0.0); // Outra esfera
     glTranslatef(0.5, 0.0, 0.0);
     drawSegment();
 
@@ -131,21 +131,21 @@ void drawLamp() {
     glRotatef(angle3, 0.0, 0.0, 1.0);
     glRotatef(angle6, 0.0, 1.0, 0.0);
     glRotatef(angle9, 1.0, 0.0, 0.0);
-    drawSphere(0.1, 1.0, 0.0, 0.0); // Add a red sphere
+    drawSphere(0.1, 1.0, 0.0, 0.0); // Outra esfera
     glTranslatef(0.5, 0.0, 0.0);
     drawSegment();
 
     glTranslatef(0.5, 0.0, 0.0);
-    drawSphere(0.2, 1.0, 1.0, 1.0); // Make the last sphere white and bigger
+    drawSphere(0.2, 1.0, 1.0, 1.0); // Esfera da lâmpada
 
-    // Add the cone shell to the last white sphere
+    // Casca de cone em volta da lâmpada
     glPushMatrix();
-    glColor3f(0.0, 0.0, 0.0); // Set color to black
-    glTranslatef(0.3, 0.0, 0.0); // Position the cone shell below the white sphere
-    glRotatef(30, 1.0, 0.0, 0.0); // Rotate the cone to point upwards
+    glColor3f(0.0, 0.0, 0.0); // Preto
+    glTranslatef(0.3, 0.0, 0.0); // Posiciona o cone
+    glRotatef(30, 1.0, 0.0, 0.0); // Rotaciona o cone
     glRotatef(-90, 0.0, 1.0, 0.0);
-    glutWireCone(0.6, 0.6, 200, 200); // Draw the cone shell
-    glColor3f(1.0, 1.0, 1.0); // Reset color to white
+    glutWireCone(0.6, 0.6, 200, 200); // Desenha o cone
+    glColor3f(1.0, 1.0, 1.0); // Reseta cor para branco
     glPopMatrix();
 
     GLfloat light_position[] = { 2.5, 0.25, 0.0, 1.0 };
@@ -155,9 +155,9 @@ void drawLamp() {
 
 void drawTeapot() {
     glPushMatrix();
-    glTranslatef(1.5, 0.5, 0.0); // Position the teapot on the table
-    glColor3f(0.5, 0.5, 0.5); // Set color to brown
-    glutSolidTeapot(1.0); // Draw a solid teapot
+    glTranslatef(1.5, 0.5, 0.0); // Posiciona o bule na mesa
+    glColor3f(0.5, 0.5, 0.5); // Cinza
+    glutSolidTeapot(1.0); // Desenha o bule
     glPopMatrix();
 }
 
@@ -179,16 +179,16 @@ void display() {
 
     glTranslatef(-1.5, 0.0, 0.0);
 
-    drawTable(); // Draw the table
-    drawBase(); // Draw the base
-    drawLamp(); // Draw the lamp with the cone shell
-    drawTeapot(); // Draw the teapot
+    drawTable(); // Desenha a mesa
+    drawBase(); // Desenha a base
+    drawLamp(); // Desenha a lâmpada
+    drawTeapot(); // Desenha o bule
 
     glutSwapBuffers();
 }
 
 void init() {
-    glClearColor(0.5, 0.5, 0.5, 1.0); // Set clear color to gray
+    glClearColor(0.5, 0.5, 0.5, 1.0); // Muda a cor de fundo para ciano
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
@@ -271,7 +271,7 @@ void specialKeys(int key, int x, int y) {
 
 void mouse(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        lightOn = !lightOn; // Toggle light state
+        lightOn = !lightOn; // Liga ou desliga luz
         if (!lightOn) {
             lightColor[0] = 0.0;
             lightColor[1] = 0.0;
@@ -306,22 +306,22 @@ void menu(int option) {
     if (option == 0) {
         reset();
     } else if (option == 1) {
-        lightColor[0] = 1.0; // Red
+        lightColor[0] = 1.0; // Vermelho
         lightColor[1] = 0.0;
         lightColor[2] = 0.0;
         color = option;
     } else if (option == 2) {
-        lightColor[0] = 0.0; // Green
+        lightColor[0] = 0.0; // Verde
         lightColor[1] = 1.0;
         lightColor[2] = 0.0;
         color = option;
     } else if (option == 3) {
-        lightColor[0] = 0.0; // Blue
+        lightColor[0] = 0.0; // Azul
         lightColor[1] = 0.0;
         lightColor[2] = 1.0;
         color = option;
     } else if (option == 4) {
-        lightColor[0] = 1.0; //White
+        lightColor[0] = 1.0; // Branco
         lightColor[1] = 1.0;
         lightColor[2] = 1.0;
         color = option;
@@ -332,14 +332,14 @@ void menu(int option) {
 
 void createMenu() {
     int submenu = glutCreateMenu(menu);
-    glutAddMenuEntry("Red", 1);
-    glutAddMenuEntry("Green", 2);
-    glutAddMenuEntry("Blue", 3);
-    glutAddMenuEntry("White", 4);
+    glutAddMenuEntry("Vermelho", 1);
+    glutAddMenuEntry("Verde", 2);
+    glutAddMenuEntry("Azul", 3);
+    glutAddMenuEntry("Branco", 4);
 
     glutCreateMenu(menu);
     glutAddMenuEntry("Reset", 0);
-    glutAddSubMenu("Change Light Color", submenu);
+    glutAddSubMenu("Mudar cor da luz", submenu);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
@@ -347,7 +347,7 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
-    glutCreateWindow("Mechanical Lamp");
+    glutCreateWindow("Lampada mecanica");
 
     init();
 
